@@ -1,0 +1,40 @@
+.bg-custom-blue {
+    background-color: #003366;
+}
+
+.btn-custom-orange {
+    background-color: #FF6600;
+    border-color: #FF6600;
+    color: white;
+}
+
+.btn-custom-orange:hover {
+    background-color: #FF8533;
+    border-color: #FF8533;
+}
+
+.btn-user-type {
+    background-color: #E9ECEF;
+    color: #495057;
+    border-color: #ced4da;
+}
+
+.btn-user-type:hover, .btn-user-type:focus {
+    background-color: #E9ECEF;
+    color: #495057;
+}
+
+.btn-user-type.active {
+    background-color: #FF6600;
+    color: white;
+}
+
+#tecnico:checked+.btn-user-type {
+    background-color: #FF6600;
+    color: white;
+}
+
+#usuario:checked+.btn-user-type {
+    background-color: #FF6600;
+    color: white;
+}
