@@ -38,3 +38,7 @@
     background-color: #FF6600;
     color: white;
 }
+
+.form-control:focus {
+    border-color: #FF6600;
+}

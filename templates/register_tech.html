@@ -7,29 +7,22 @@
 <main class="flex-grow-1 bg-white py-5">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-6">
+            <!-- Mantenemos el formulario ancho con col-md-8 -->
+            <div class="col-md-8">  
                 <h1 class="text-center text-custom-blue mb-4">REGISTRARSE</h1>
                 <p class="text-center mb-3">Qué eres?</p>
-                <div class="btn-group w-100 mb-4" role="group">
+
+                <!-- Ajustamos el estilo para que los botones de usuario/técnico sean más pequeños -->
+                <div class="d-flex flex-column align-items-center w-100 mb-4" role="group">
                     <input type="radio" class="btn-check" name="user_type" id="usuario" autocomplete="off" disabled>
-                    <label class="btn btn-user-type " for="usuario">Usuario</label>
-                    <input type="radio" class="btn-check active" name="user_type" id="tecnico" autocomplete="off" checked>
-                    <label class="btn btn-user-type" for="tecnico">Técnico</label>
+                    <label class="btn btn-user-type mb-2 w-50" for="usuario">Usuario</label> <!-- Añadí w-50 para reducir el ancho -->
+
+                    <input type="radio" class="btn-check" name="user_type" id="tecnico" autocomplete="off" checked>
+                    <label class="btn btn-user-type mb-2 w-50" for="tecnico">Técnico</label> <!-- Añadí w-50 para reducir el ancho -->
                 </div>
+
                 <form method="post" action="{% url 'login' %}">
                     {% csrf_token %}
-
-
-
-
-
-
-
-
-
-
-
-
                     <div class="row g-3">
                         <div class="col-md">
                             <div class="form-floating">
@@ -49,13 +42,9 @@
                                 <label for="surname">Apellido *</label>
                             </div>
                         </div>
-
-
                     </div>
 
                     <br>
-
-
 
                     <div class="row g-3">
                         <div class="col-md">
@@ -96,56 +85,33 @@
                             </div>
                             <div class="col-md">
                                 <div class="form-floating">
-                                    <input type="url" class="form-control" id="urlLinkedin" name="urlLinkedin" placeholder="" pattern="https?://.*"                                    required>
+                                    <input type="url" class="form-control" id="urlLinkedin" name="urlLinkedin" placeholder="" pattern="https?://.*" required>
                                     <label for="urlLinkedin">Linkedin (url) *</label>
                                 </div>
                             </div>
-                            
                         </div>
-
-
 
                         <div class="row g-3">
                             <div class="col-md">
                                 <label for="formFile" class="form-label">Título Académico (PDF) *</label>
                                 <input class="form-control" type="file" id="formFile" accept=".pdf">
                             </div>
-    
+
                             <div class="col-md">
                                 <label for="formFile" class="form-label">Curriculum Vitae (PDF) *</label>
                                 <input class="form-control" type="file" id="formFile" accept=".pdf">
                             </div>
-    
+
                             <div class="col-md">
                                 <label for="formFile" class="form-label">Carta Presentación (PDF) *</label>
                                 <input class="form-control" type="file" id="formFile" accept=".pdf">
-                            </div>                        
+                            </div>
                         </div>
-
-
-
                     </div>
 
-                    <br>
-
-
-                    <br><br>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                    <br><br><br><br>
-                    <button type="submit" class="btn btn-custom-orange w-100">Confirmar</button>
+                    <br><br><br>
+                    
+                    <button type="submit" class="btn btn-custom-orange w-100">Confirmar Solicitud</button>
                 </form>
             </div>
         </div>
