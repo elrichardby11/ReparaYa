@@ -4,18 +4,43 @@
 <header class="bg-custom-blue text-white py-3">
     <div class="container">
         <div class="row align-items-center">
-            <div class="col-md-6">
+            <!-- Navbar links -->
+            <div class="col-md-4">
                 <nav>
-                    <ul class="nav">
-                        <li class="nav-item"><a href="#" class="nav-link text-white">Servicios</a></li>
-                        <li class="nav-item"><a href="#" class="nav-link text-white">Por qué Nosotros</a></li>
-                        <li class="nav-item"><a href="#" class="nav-link text-white">Garantía</a></li>
+                    <ul class="nav justify-content-start">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link text-white">Servicios</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link text-white">Por qué Nosotros</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link text-white">Garantía</a>
+                        </li>
                     </ul>
                 </nav>
             </div>
-            <div class="col-md-6 text-end">
-                <a href="{% url "login" %}" class="text-white me-3">Acceder</a>
-                <a href="{% url "register" %}" class="text-white">Registrarse</a>
+
+            <!-- Logo -->
+            <div class="col-md-4 text-center">
+                <a href="{% url 'home' %}" class="brand-wrap">
+                    <img class="logo" src="{% static 'images/logo.webp' %}" width="50" alt="Logo">
+                </a>
+            </div>
+
+            <!-- Acceso y registro -->
+            <div class="col-md-4 text-end">
+                {% if user.is_authenticated %}
+                    <span class="text-white me-3">Bienvenido, {{ user.first_name }}!</span>
+                    <div class="d-inline-block">
+                        <a href="#" class="text-white me-3">Perfil</a>
+                        <span class="dark-transp">|</span>
+                        <a href="{% url 'logout' %}" class="text-white">Salir</a>
+                    </div>
+                {% else %}
+                    <a href="{% url 'login' %}" class="text-white me-3">Acceder</a>
+                    <a href="{% url 'register' %}" class="text-white">Registrarse</a>
+                {% endif %}
             </div>
         </div>
     </div>
