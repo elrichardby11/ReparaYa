@@ -5,9 +5,10 @@
     <div class="container">
         <div class="row align-items-center">
             <!-- Navbar links -->
-            <div class="col-md-4">
+            <div class="col-12 col-md-4">
                 <nav>
-                    <ul class="nav justify-content-start">
+                    {% if not user.is_authenticated %}
+                    <ul class="nav justify-content-center justify-content-md-start">
                         <li class="nav-item">
                             <a href="#" class="nav-link text-white">Servicios</a>
                         </li>
@@ -18,18 +19,31 @@
                             <a href="#" class="nav-link text-white">Garantía</a>
                         </li>
                     </ul>
+                    {% else %}
+                    <ul class="nav justify-content-center justify-content-md-start">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link text-white">Mis Solicitudes</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link text-white">Técnicos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link text-white">Soporte</a>
+                        </li>
+                    </ul>
+                    {% endif %}
                 </nav>
             </div>
 
             <!-- Logo -->
-            <div class="col-md-4 text-center">
+            <div class="col-12 col-md-4 text-center mb-3 mb-md-0">
                 <a href="{% url 'home' %}" class="brand-wrap">
                     <img class="logo" src="{% static 'images/logo.webp' %}" width="50" alt="Logo">
                 </a>
             </div>
 
             <!-- Acceso y registro -->
-            <div class="col-md-4 text-end">
+            <div class="col-12 col-md-4 text-center text-md-end">
                 {% if user.is_authenticated %}
                     <span class="text-white me-3">Bienvenido, {{ user.first_name }}!</span>
                     <div class="d-inline-block">

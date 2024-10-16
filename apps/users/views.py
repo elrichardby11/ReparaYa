@@ -2,7 +2,6 @@ from django.shortcuts import redirect, render
 from django.contrib import auth, messages
 
 from apps.users.forms import RegistrationForm
-from apps.users.models import User
 from apps.users.utils import verify_rut
 
 def login(request):
@@ -12,6 +11,7 @@ def login(request):
         user = auth.authenticate(request, email=email, password=password)
         
         if user is None:
+            messages.error(request, "Clave incorrecta .Vuelva a Intentar (Recuerde que el campo password es sensible a mayúsculas y minúsculas).")
             return redirect('login')
         
         auth.login(request, user)
