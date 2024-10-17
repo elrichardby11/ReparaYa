@@ -22,9 +22,9 @@ class Device(models.Model):
 
 class Request(models.Model):
     rut_user = models.ForeignKey(User, on_delete=models.CASCADE)
-    technician_service = models.ForeignKey(TechnicianService, on_delete=models.CASCADE)
+    technician_service = models.ForeignKey(TechnicianService, on_delete=models.CASCADE, blank=True, null=True)
     request_date = models.DateField()
-    id_status = models.ForeignKey(RequestStatus, on_delete=models.CASCADE)
+    id_status = models.ForeignKey(RequestStatus, on_delete=models.CASCADE, default=1)
     #device = models.ForeignKey(Device, on_delete=models.CASCADE)
     id_specialty = models.ForeignKey(Specialty, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
@@ -32,3 +32,6 @@ class Request(models.Model):
     technician_comment = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title

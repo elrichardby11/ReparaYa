@@ -1,0 +1,19 @@
+{% load static %}
+<div class="col-md-3 sidebar py-3">
+    <a href="{% url "add_request" %}">
+        <button class="btn btn-custom-orange w-100 mb-3">Añadir Solicitud</button>
+    </a>
+    <h5>Historial de Reparaciones:</h5>
+    <div class="list-group">
+        {% for repair in repair_history %}
+            <a href="{% url 'request_detail' repair.id %}" class="list-group-item list-group-item-action">
+                <h6>{{ repair.title }}</h6>
+                <small class="text-muted">Descripción: {{ repair.customer_comment }}</small>
+                <br>
+                <small class="text-muted">Estado: {{ repair.id_status.name }}</small>
+            </a>
+        {% empty %}
+            <p class="text-muted">No hay reparaciones en el historial.</p>
+        {% endfor %}
+    </div>
+</div>

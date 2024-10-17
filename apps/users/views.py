@@ -52,6 +52,7 @@ def register_user(request):
             user.dv = dv
             user.rut = rut
             user.is_active = True
+            form.save(commit=True)
             messages.success(request, "Registro exitoso. Puedes iniciar sesión.")
             return redirect('login')
         
