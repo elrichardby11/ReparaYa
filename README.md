@@ -7,7 +7,7 @@ Sigue estos pasos para configurar el proyecto en tu entorno local:
 ### 1. Clona el Repositorio
 
 ```bash
-git clone git@github.com:elrichardby11/ReparaYa.git
+git clone https://github.com/elrichardby11/ReparaYa.git
 cd ReparaYa
 ```
 
