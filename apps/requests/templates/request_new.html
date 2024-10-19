@@ -32,7 +32,6 @@ Nueva Solicitud - ReparaYa
                     <div class="mb-3">
                         <label for="device_type" class="form-label">Tipo Electrónico</label>
                         <select class="form-select" id="device_type" name="device_type" required>
-                            <option value="">Seleccionar...</option>
                             {% for specialty in specialties %}
                                 <option value="{{ specialty.id }}">{{ specialty.name }}</option>
                             {% endfor %}
