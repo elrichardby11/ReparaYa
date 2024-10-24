@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Selección de Dispositivos - ReparaYa
+{% endblock %}
+
+{% block content %}
+
+    <div class="container mt-5">
+        <h2 class="mb-4">Seleccione, qué dispositivo(s) sabe reparar?:</h2>
+        <form method="post" action="{% url 'device_selection' %}" id="device-form">
+            {% csrf_token %}
+            <div class="row row-cols-2 row-cols-md-4 g-4 mb-4">
+                <div class="col">
+                    <div class="device-option" data-device="Celular">
+                        <div class="device-icon">📱</div>
+                        <div>Celular</div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="device-option" data-device="Tablet">
+                        <div class="device-icon">📱</div>
+                        <div>Tablet</div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="device-option" data-device="PC">
+                        <div class="device-icon">🖥️</div>
+                        <div>PC</div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="device-option" data-device="Notebook">
+                        <div class="device-icon">💻</div>
+                        <div>Notebook</div>
+                    </div>
+                </div>
+            </div>
+            <p class="text-danger" id="required-message" style="display: none;">Por favor, seleccione al menos un dispositivo.</p>
+            <div id="selected_devices_display" class="mb-3"></div>
+            <input type="hidden" name="selected_devices" id="selected_devices" value="">
+            <button type="submit" class="btn btn-primary" style="background-color: #FF6600; border-color: #FF6600;">Siguiente</button>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const deviceOptions = document.querySelectorAll('.device-option');
+            const selectedDevicesInput = document.getElementById('selected_devices');
+            const selectedDevicesDisplay = document.getElementById('selected_devices_display');
+            const requiredMessage = document.getElementById('required-message');
+            const form = document.querySelector('form');
+            let selectedDevices = [];
+
+            function updateSelectedDevices() {
+                selectedDevicesInput.value = JSON.stringify(selectedDevices);
+                selectedDevicesDisplay.innerHTML = selectedDevices.length > 0
+                    ? `Dispositivos seleccionados: ${selectedDevices.join(', ')}`
+                    : 'Ningún dispositivo seleccionado';
+                requiredMessage.style.display = selectedDevices.length === 0 ? 'block' : 'none';
+            }
+
+            deviceOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const device = this.dataset.device;
+                    if (this.classList.toggle('selected')) {
+                        selectedDevices.push(device);
+                    } else {
+                        selectedDevices = selectedDevices.filter(d => d !== device);
+                    }
+                    updateSelectedDevices();
+                });
+            });
+
+            form.addEventListener('submit', function(e) {
+                if (selectedDevices.length === 0) {
+                    e.preventDefault();
+                    requiredMessage.style.display = 'block';
+                }
+            });
+
+            updateSelectedDevices();
+        });
+    </script>
+
+
+{% endblock content %}

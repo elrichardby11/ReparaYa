@@ -1,22 +1,12 @@
 from django.shortcuts import redirect, render
 from django.contrib import auth, messages
 
-from apps.users.forms import RegistrationForm
+from apps.specialties.models import Specialty
+from apps.users.forms import RegistrationFormUser, RegistrationFormTech
+from apps.users.models import Technician, TechnicianSpecialty
 from apps.users.utils import verify_rut
 
-def login(request):
-    if request.method == "POST":
-        email = request.POST["email"]
-        password = request.POST["password"]
-        user = auth.authenticate(request, email=email, password=password)
-        
-        if user is None:
-            messages.error(request, "Clave incorrecta .Vuelva a Intentar (Recuerde que el campo password es sensible a mayúsculas y minúsculas).")
-            return redirect('login')
-        
-        auth.login(request, user)
-        return redirect('home')
-    return render(request, 'login.html')
+import json
 
 def register(request):
     if request.method == 'POST':
@@ -31,7 +21,7 @@ def register(request):
 
 def register_user(request):
     if request.method == 'POST':
-        form = RegistrationForm(request.POST)
+        form = RegistrationFormUser(request.POST)
         if form.is_valid():
             # Procesar RUT
             rut_completo = str(form.cleaned_data['rut']).split("-")
@@ -63,13 +53,85 @@ def register_user(request):
                     messages.error(request, f"{field.capitalize()}: {error}")
 
     else:
-        form = RegistrationForm()
+        form = RegistrationFormUser()
     
     return render(request, 'register_user.html', {'form': form})
 
 def register_tech(request):
-    messages.success(request, "Solicitud enviada correctamente")    
-    return render(request, "register_tech.html")
+    if request.method == 'POST':
+        form = RegistrationFormTech(request.POST)
+        if form.is_valid():
+            # Procesar RUT
+            rut_completo = str(form.cleaned_data['rut']).split("-")
+            if len(rut_completo) != 2:
+                messages.error(request, "Error, debe introducir un RUT válido! (10123456-1)")
+                return render(request, 'register_tech.html', {'form': form})
+
+            rut = rut_completo[0]
+            dv = rut_completo[1].lower() if not rut_completo[1].isdigit() else rut_completo[1]
+
+            # Verificar el RUT
+            if dv != verify_rut(rut):
+                messages.error(request, "Por favor, verifique el RUT!")
+                return render(request, 'register_tech.html', {'form': form})
+
+            # Crea el usuario
+            user = form.save(commit=False)
+            user.dv = dv
+            user.rut = rut
+            user.is_active = True
+            request.session['tech_rut'] = rut
+            form.save(commit=True)
+            return redirect('device_selection')
+        
+        else:
+            # Mostrar errores específicos para cada campo
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field.capitalize()}: {error}")
+
+    else:
+        form = RegistrationFormTech()
+    
+    return render(request, 'register_tech.html', {'form': form})
+
+def device_selection(request):
+    if request.method == 'POST':
+        selected_devices = json.loads(request.POST.get('selected_devices', '[]'))
+        rut = request.session.get('tech_rut', '')
+
+        if not selected_devices:
+            return render(request, 'register_tech2.html', {'error': 'Por favor, seleccione al menos un dispositivo.'})
+
+        if not rut:
+            return render(request, 'register_tech.html', {'error': 'Por favor, vuelva a registrarse.'})
+
+        for name in selected_devices:
+            technician = Technician.objects.filter(rut=rut).first()
+            specialty = Specialty.objects.filter(name=name).first()
+            tech_specialty = TechnicianSpecialty.objects.create(
+                rut_technician=technician,
+                id_specialty=specialty)
+
+        del request.session['tech_rut']
+        messages.success(request, "Registro exitoso. Puedes iniciar sesión.")
+        return redirect('login')
+
+    return render(request, 'register_tech2.html')
+
+def login(request):
+    if request.method == "POST":
+        email = request.POST["email"]
+        password = request.POST["password"]
+        user = auth.authenticate(request, email=email, password=password)
+        
+        if user is None:
+            messages.error(request, "Clave incorrecta .Vuelva a Intentar (Recuerde que el campo password es sensible a mayúsculas y minúsculas).")
+            return redirect('login')
+        
+        auth.login(request, user)
+        return redirect('home')
+    return render(request, 'login.html')
 
 def logout(request):
     auth.logout(request)

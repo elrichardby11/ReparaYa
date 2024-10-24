@@ -27,27 +27,12 @@ Registro Usuario - ReparaYa
                     <div class="row g-2">
                         <div class="col-md">
                             <div class="form-floating">
-                                {{ form.rut|as_crispy_field }} <!-- Crispy Field -->
+                                {{ form.rut|as_crispy_field }}
                             </div>
                         </div>
                         <div class="col-md">
                             <div class="form-floating">
-                                {{ form.phone|as_crispy_field }} <!-- Crispy Field -->
-                            </div>
-                        </div>
-                    </div>
-
-                    <br>
-
-                    <div class="row g-2">
-                        <div class="col-md">
-                            <div class="form-floating">
-                                {{ form.first_name|as_crispy_field }} <!-- Crispy Field -->
-                            </div>
-                        </div>
-                        <div class="col-md">
-                            <div class="form-floating">
-                                {{ form.last_name|as_crispy_field }} <!-- Crispy Field -->
+                                {{ form.phone|as_crispy_field }}
                             </div>
                         </div>
                     </div>
@@ -57,12 +42,12 @@ Registro Usuario - ReparaYa
                     <div class="row g-2">
                         <div class="col-md">
                             <div class="form-floating">
-                                {{ form.email|as_crispy_field }} <!-- Crispy Field -->
+                                {{ form.first_name|as_crispy_field }}
                             </div>
                         </div>
                         <div class="col-md">
                             <div class="form-floating">
-                                {{ form.email_confirm|as_crispy_field }} <!-- Campo de confirmación personalizado -->
+                                {{ form.last_name|as_crispy_field }}
                             </div>
                         </div>
                     </div>
@@ -72,12 +57,27 @@ Registro Usuario - ReparaYa
                     <div class="row g-2">
                         <div class="col-md">
                             <div class="form-floating">
-                                {{ form.password1|as_crispy_field }} <!-- Crispy Field -->
+                                {{ form.email|as_crispy_field }}
                             </div>
                         </div>
                         <div class="col-md">
                             <div class="form-floating">
-                                {{ form.password2|as_crispy_field }} <!-- Crispy Field -->
+                                {{ form.email_confirm|as_crispy_field }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <div class="row g-2">
+                        <div class="col-md">
+                            <div class="form-floating">
+                                {{ form.password1|as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="col-md">
+                            <div class="form-floating">
+                                {{ form.password2|as_crispy_field }}
                             </div>
                         </div>
                     </div>

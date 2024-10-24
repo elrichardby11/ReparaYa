@@ -42,3 +42,24 @@
 .form-control:focus {
     border-color: #FF6600;
 }
+
+.device-option {
+    cursor: pointer;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    padding: 1rem;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+.device-option:hover {
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+.device-option.selected {
+    background-color: #FF6600;
+    color: white;
+    border-color: #FF6600;
+}
+.device-icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}

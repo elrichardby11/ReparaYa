@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load crispy_forms_tags %}
 
 {% block title %}
 Registro Técnico - ReparaYa
@@ -25,25 +26,22 @@ Registro Técnico - ReparaYa
                     <label class="btn btn-user-type mb-2 w-50" for="tecnico">Técnico</label>
                 </div>
 
-                <form method="post" action="{% url 'login' %}">
+                <form method="post" action="{% url 'register_tech' %}">
                     {% csrf_token %}
                     <div class="row g-3">
                         <div class="col-md">
                             <div class="form-floating">
-                                <input type="text" class="form-control" id="rut" name="rut" placeholder="" required>
-                                <label for="rut">RUT (10123456-7) *</label>
+                                {{ form.rut|as_crispy_field }}
                             </div>
                         </div>
                         <div class="col-md">
                             <div class="form-floating">
-                                <input type="text" class="form-control" id="name" name="name" placeholder="" required>
-                                <label for="name">Nombre *</label>
+                                {{ form.first_name|as_crispy_field }}
                             </div>
                         </div>
                         <div class="col-md">
                             <div class="form-floating">
-                                <input type="text" class="form-control" id="surname" name="surname" placeholder="" required>
-                                <label for="surname">Apellido *</label>
+                                {{ form.last_name|as_crispy_field }}
                             </div>
                         </div>
                     </div>
@@ -53,20 +51,17 @@ Registro Técnico - ReparaYa
                     <div class="row g-3">
                         <div class="col-md">
                             <div class="form-floating">
-                                <input type="email" class="form-control" id="email" name="email" placeholder="" required>
-                                <label for="email">Email *</label>
+                                {{ form.email|as_crispy_field }}
                             </div>
                         </div>
                         <div class="col-md">
                             <div class="form-floating">
-                                <input type="email" class="form-control" id="emailConfirm" name="emailConfirm" placeholder="" required>
-                                <label for="emailConfirm">Confirmar Email *</label>
+                                {{ form.email_confirm|as_crispy_field }}
                             </div>
                         </div>
                         <div class="col-md">
                             <div class="form-floating">
-                                <input type="number" class="form-control" id="phone" name="phone" placeholder="" required>
-                                <label for="phone">Teléfono (+56912345678) *</label>
+                                {{ form.phone|as_crispy_field }}
                             </div>
                         </div>
                     </div>
@@ -77,20 +72,17 @@ Registro Técnico - ReparaYa
                         <div class="row g-2">
                             <div class="col-md">
                                 <div class="form-floating">
-                                    <input type="password" class="form-control" id="password" name="password" placeholder="" required>
-                                    <label for="password">Contraseña *</label>
+                                    {{ form.password1|as_crispy_field }}
                                 </div>
                             </div>
                             <div class="col-md">
                                 <div class="form-floating">
-                                    <input type="password" class="form-control" id="passwordConfirm" name="passwordConfirm" placeholder="" required>
-                                    <label for="passwordConfirm">Confirmar Contraseña *</label>
+                                    {{ form.password2|as_crispy_field }}
                                 </div>
                             </div>
                             <div class="col-md">
                                 <div class="form-floating">
-                                    <input type="url" class="form-control" id="urlLinkedin" name="urlLinkedin" placeholder="" pattern="https?://.*" required>
-                                    <label for="urlLinkedin">Linkedin (url) *</label>
+                                    {{ form.url_linkedin|as_crispy_field }}
                                 </div>
                             </div>
                         </div>

@@ -25,8 +25,7 @@ class MyAccountManager(BaseUserManager):
         user.save(using=self._db)
         return user
     
-    # TODO actualizar para técnico links de la bbdd
-    def create_tech(self, rut, dv, first_name, last_name, phone, email, password=None):
+    def create_tech(self, rut, dv, first_name, last_name, phone, email, password=None, url_linkedin=None):
         if not rut or dv:
             raise ValueError("Debe de ingresar el rut! ")
         
@@ -40,13 +39,14 @@ class MyAccountManager(BaseUserManager):
             last_name = last_name,
             email = self.normalize_email(email=email),
             phone = phone,
+            url_linkedin = url_linkedin,
         )
 
         user.set_password(password)
         user.is_active = True
         user.save(using=self._db)
         return user
-    
+
     def create_superuser(self, rut, dv, first_name, last_name, phone, email, password):
         
         user = self.create_user(
@@ -100,8 +100,7 @@ class User(AbstractBaseUser):
     
     objects = MyAccountManager()
 
-class Technician(models.Model):
-    # TODO actualizar, añadir links para la demás información
+class Technician(AbstractBaseUser):
     rut = models.CharField(max_length=10, primary_key=True)
     dv = models.CharField(max_length=2)
     first_name = models.CharField(max_length=100)
@@ -109,11 +108,37 @@ class Technician(models.Model):
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=100)
     phone = models.CharField(max_length=15)
+    url_linkedin = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f'{self.first_name} {self.last_name}'
+    
+    # Campos atributos de django
+    date_joined = models.DateTimeField(auto_now_add=True)
+    last_login = models.DateTimeField(auto_now_add=True)
+    is_admin = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=False)
+    is_superadmin = models.BooleanField(default=False)
+    
+    # Si queremos que email se use como login
+    USERNAME_FIELD = 'email'
+
+    # Establece los campos obligatorios
+    REQUIRED_FIELDS = ['rut', 'dv', 'first_name', 'last_name', 'phone', 'url_linkedin']
+
+    def __str__(self) -> str:
+        return self.email
+    
+    def has_perm(self, perm, obj=None):
+        return self.is_admin
+    
+    def has_module_perms(self, add_label):
+        return True
+    
+    objects = MyAccountManager()
 
 class TechnicianSpecialty(models.Model):
     rut_technician = models.ForeignKey(Technician, on_delete=models.CASCADE)
