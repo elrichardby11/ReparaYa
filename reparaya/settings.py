@@ -139,6 +139,11 @@ USE_TZ = True
 STATIC_URL = "static/"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'reparaya/static'),]
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',  # Para autenticación de User
+    'apps.users.backends.CustomBackend',          # Para autenticación de Technician
+]
+
 AUTH_USER_MODEL = "users.User"
 
 # Default primary key field type

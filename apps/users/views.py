@@ -3,8 +3,10 @@ from django.contrib import auth, messages
 
 from apps.specialties.models import Specialty
 from apps.users.forms import RegistrationFormUser, RegistrationFormTech
-from apps.users.models import Technician, TechnicianSpecialty
+from apps.users.models import Technician, TechnicianSpecialty, User
 from apps.users.utils import verify_rut
+from django.contrib.auth import login, authenticate
+
 
 import json
 
@@ -119,6 +121,7 @@ def device_selection(request):
 
     return render(request, 'register_tech2.html')
 
+"""
 def login(request):
     if request.method == "POST":
         email = request.POST["email"]
@@ -131,6 +134,28 @@ def login(request):
         
         auth.login(request, user)
         return redirect('home')
+    return render(request, 'login.html')
+"""
+
+def custom_login(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        # Intentar autenticar en el modelo User
+        user = authenticate(request, email=email, password=password)
+        if user is not None:
+            login(request, user)  # Solo pasa el request y el usuario
+            return redirect('home')  # Redirigir al dashboard o página inicial
+
+        # Intentar autenticar en el modelo Technician si no se encontró en User
+        technician = authenticate(request, email=email, password=password, backend='apps.users.backends.CustomBackend')
+        if technician is not None:
+            login(request, technician)  # Solo pasa el request y el usuario
+            return redirect('home')  # Redirigir al dashboard o página inicial
+
+        messages.error(request, 'Credenciales inválidas. Inténtalo nuevamente.')
+
     return render(request, 'login.html')
 
 def logout(request):
