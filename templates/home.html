@@ -24,7 +24,10 @@ Inicio - ReparaYa
     </p>
 </div>
 </div>
+
 {% else %}
+
+{% if user_type == 'user' %}
 
 <div class="container mt-4">
     <h1>Acceso Directo: </h1>
@@ -66,6 +69,49 @@ Inicio - ReparaYa
     </div>
 </div>
 <br><br>
+
+{% elif user_type == 'technician' %}
+<div class="container mt-4">
+    <h1>Acceso Directo: </h1>
+    <br>
+    <div class="row">
+        <div class="col-md-4">
+            <a href="" class="card-link">
+                <div class="card">
+                    <div class="card-body d-flex flex-column align-items-center">
+                        <img src="{% static 'images/home/publication.webp' %}" alt="supplier image" class="mb-2" width="225">
+                        <h5 class="card-title text-center">Solicitudes</h5>
+                        <p class="card-text text-center">Encuentra las solicitudes para reparar dispositivos.</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="" class="card-link">
+                <div class="card">
+                    <div class="card-body d-flex flex-column align-items-center">
+                        <img src="{% static 'images/home/smartphone_cracked.webp' %}" alt="smartphone craked" class="mb-2" width="225">
+                        <h5 class="card-title text-center">Mis solicitudes</h5>
+                        <p class="card-text text-center">Solicitudes tomadas por ti y por el usuario.</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="" class="card-link">
+                <div class="card">
+                    <div class="card-body d-flex flex-column align-items-center">
+                        <img src="{% static 'images/home/support.webp' %}" alt="inventory image" class="mb-2" width="197">
+                        <h5 class="card-title text-center"><br>Soporte</h5>
+                        <p class="card-text text-center">Contactanos en caso de que suceda algún inconveniente.</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+<br><br>
+{% endif %}
 
 {% endif %}
 

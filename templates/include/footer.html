@@ -15,9 +15,13 @@
 					<li><a href="#" class="text-white">Servicios</a></li>
 					<li><a href="#" class="text-white">Por qué nosotros</a></li>
 					<li><a href="#" class="text-white">Garantía</a></li>
-					{% else %}
+                    {% elif user_type == 'user' %}
 					<li><a href="#" class="text-white">Mis Solicitudes</a></li>
 					<li><a href="#" class="text-white">Técnicos</a></li>
+					<li><a href="#" class="text-white">Soporte</a></li>
+					{% elif user_type == 'technician' %}
+					<li><a href="#" class="text-white">Solicitudes</a></li>
+					<li><a href="#" class="text-white">Mis Solicitudes</a></li>
 					<li><a href="#" class="text-white">Soporte</a></li>
 					{% endif %}
 				</ul>

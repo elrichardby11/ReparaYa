@@ -1,12 +1,11 @@
 from django.shortcuts import redirect, render
 from django.contrib import auth, messages
+from django.contrib.auth import login, authenticate
 
 from apps.specialties.models import Specialty
 from apps.users.forms import RegistrationFormUser, RegistrationFormTech
 from apps.users.models import Technician, TechnicianSpecialty, User
 from apps.users.utils import verify_rut
-from django.contrib.auth import login, authenticate
-
 
 import json
 
@@ -120,22 +119,6 @@ def device_selection(request):
         return redirect('login')
 
     return render(request, 'register_tech2.html')
-
-"""
-def login(request):
-    if request.method == "POST":
-        email = request.POST["email"]
-        password = request.POST["password"]
-        user = auth.authenticate(request, email=email, password=password)
-        
-        if user is None:
-            messages.error(request, "Clave incorrecta .Vuelva a Intentar (Recuerde que el campo password es sensible a mayúsculas y minúsculas).")
-            return redirect('login')
-        
-        auth.login(request, user)
-        return redirect('home')
-    return render(request, 'login.html')
-"""
 
 def custom_login(request):
     if request.method == 'POST':

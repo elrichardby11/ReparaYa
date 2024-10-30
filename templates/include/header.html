@@ -19,13 +19,25 @@
                             <a href="#" class="nav-link text-white">Garantía</a>
                         </li>
                     </ul>
-                    {% else %}
+                    {% elif user_type == 'user' %}
                     <ul class="nav justify-content-center justify-content-md-start">
                         <li class="nav-item">
                             <a href="{% url "requests" %}" class="nav-link text-white">Mis Solicitudes</a>
                         </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link text-white">Técnicos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link text-white">Soporte</a>
+                        </li>
+                    </ul>
+                    {% elif user_type == 'technician' %}
+                    <ul class="nav justify-content-center justify-content-md-start">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link text-white">Solicitudes</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="" class="nav-link text-white">Mis Solicitudes</a>
                         </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link text-white">Soporte</a>
