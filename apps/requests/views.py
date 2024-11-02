@@ -78,7 +78,9 @@ def tech_requests(request, id=None):
     context = {"available_requests": available_requests}
 
     if id:
-        solicitud = get_object_or_404(Request, id=id, id_specialty__in=TechnicianSpecialty.objects.filter(rut_technician=technician_rut).values('id_specialty'))
+        solicitud = get_object_or_404(Request, id=id, id_status=1,
+                                      id_specialty__in=TechnicianSpecialty.objects.filter(rut_technician=technician_rut)
+                                      .values('id_specialty'))
         context["request"] = solicitud
 
     template_name = "tech_request_detail.html" if id else "tech_requests.html"
