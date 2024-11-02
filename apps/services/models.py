@@ -11,9 +11,6 @@ class Service(models.Model):
 class TechnicianService(models.Model):
     rut_technician = models.ForeignKey(Technician, on_delete=models.CASCADE)
     id_service = models.ForeignKey(Service, on_delete=models.CASCADE)
-    cost = models.IntegerField() # in CLP, can be estimate
-    estimated_duration = models.IntegerField()  # in minutes
-    location = models.CharField(max_length=100) # should be repaired (domicile or technician´s workshop)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

@@ -1,0 +1,16 @@
+{% load static %}
+<div class="col-md-3 sidebar py-3">
+    <h5>Solicitudes disponibles para ti:</h5>
+    <div class="list-group">
+        {% for request in available_requests %}
+            <a href="{% url 'tech_request_detail' request.id %}" class="list-group-item list-group-item-action">
+                <h6>{{ request.title }}</h6>
+                <small class="text-muted">Descripción: {{ request.customer_comment }}</small>
+                <br>
+                <small class="text-muted">Tipo: {{ request.id_specialty.name }}</small>
+            </a>
+        {% empty %}
+            <p class="text-muted">No hay solicitudes en este momento.</p>
+        {% endfor %}
+    </div>
+</div>

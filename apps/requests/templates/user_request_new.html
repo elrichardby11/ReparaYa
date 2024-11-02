@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Nueva Solicitud - ReparaYa
+{% endblock %}
+
+{% block content %}
+
+{% load static %}
+
+<!-- Main Content -->
+<main class="flex-grow-1">
+    <div class="container-fluid">
+        <div class="row">
+
+            {% include "include/user_sidebar.html" %}
+            
+            <!-- Form -->
+            <div class="col-md-9 py-3">
+                <h2 class="mb-4">Nueva Solicitud de Reparación</h2>
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="image" class="form-label">Imagen</label>
+                        <input type="file" class="form-control" id="image" name="image">
+                    </div>
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Título</label>
+                        <input type="text" class="form-control" id="title" name="title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="device_type" class="form-label">Tipo Electrónico</label>
+                        <select class="form-select" id="device_type" name="device_type" required>
+                            {% for specialty in specialties %}
+                                <option value="{{ specialty.id }}">{{ specialty.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="problem_description" class="form-label">Describe tu Problema detalladamente</label>
+                        <textarea class="form-control" id="problem_description" name="problem_description" rows="4" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-custom-orange">Continuar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+
+{% endblock content %}

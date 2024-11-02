@@ -1,30 +1,30 @@
 from django.shortcuts import get_object_or_404, redirect, render
-from django.contrib.auth.decorators import login_required
-
+from apps.users.decorators import technician_required, user_required
 from apps.specialties.models import Specialty
-from apps.users.models import User
 from django.contrib import messages
-
+from apps.users.models import TechnicianSpecialty
 from .models import Request
 from datetime import datetime
 
-@login_required
+# USER
+
+@user_required
 def requests(request, id=None):
     if request.method == "POST":
-        return redirect("requests")
+        return redirect("user_requests")
 
     requests_history = Request.objects.filter(rut_user=request.user.rut).order_by('-created_at')[:5]
     context = {"repair_history": requests_history}
 
     if id:
-        solicitud = get_object_or_404(Request, id=id)
+        solicitud = get_object_or_404(Request, id=id, rut_user=request.user.rut)
         context["request"] = solicitud
 
-    template_name = "request_detail.html" if id else "requests.html"
+    template_name = "user_request_detail.html" if id else "user_requests.html"
     
     return render(request, template_name, context)
 
-@login_required
+@user_required
 def add_request(request):
     requests_history = Request.objects.filter(rut_user=request.user.rut).order_by('-created_at')[:5]
     specialties = Specialty.objects.all()
@@ -48,7 +48,7 @@ def add_request(request):
             )
 
             messages.success(request, "¡Se ha creado una solicitud de reparación!")
-            return redirect("requests")
+            return redirect("user_requests")
 
         except Exception as e:
             messages.error(request, f"Se ha producido un error: {e}. Por favor, verifique los datos.")
@@ -59,4 +59,28 @@ def add_request(request):
         "specialties": specialties,
     }
 
-    return render(request, "request_new.html", context)
+    return render(request, "user_request_new.html", context)
+
+# TECH
+
+@technician_required
+def tech_requests(request, id=None):
+    if request.method == "POST":
+        return redirect("tech_requests")
+    
+    # Consulta para saber todas las solicitudes que puede
+    # reparar el técnico de acuerdo a lo que sabe reparar
+    technician_rut = request.user.rut
+    available_requests = Request.objects.filter(
+    id_specialty__in=TechnicianSpecialty.objects.filter(rut_technician=technician_rut).values('id_specialty'),
+    ).exclude(id_status_id__in=[2, 3]).order_by("-created_at")[:5]
+    
+    context = {"available_requests": available_requests}
+
+    if id:
+        solicitud = get_object_or_404(Request, id=id, id_specialty__in=TechnicianSpecialty.objects.filter(rut_technician=technician_rut).values('id_specialty'))
+        context["request"] = solicitud
+
+    template_name = "tech_request_detail.html" if id else "tech_requests.html"
+    
+    return render(request, template_name, context)

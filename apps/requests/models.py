@@ -35,3 +35,10 @@ class Request(models.Model):
 
     def __str__(self):
         return self.title
+    
+class Quotation(models.Model):
+    id_request = models.ForeignKey(Request, on_delete=models.CASCADE)
+    technician_rut = models.ForeignKey(TechnicianService, on_delete=models.CASCADE)
+    estimated_cost = models.IntegerField()
+    estimated_duration = models.IntegerField()
+    location = models.CharField(max_length=100)

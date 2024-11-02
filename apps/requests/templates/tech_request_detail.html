@@ -14,12 +14,12 @@ Solicitud Nro {{ request.id }} - ReparaYa
     <div class="container-fluid">
         <div class="row">
 
-            {% include "include/sidebar.html" %}
+            {% include "include/tech_sidebar.html" %}
             
             <!-- Form -->
             <div class="col-md-9 py-3">
                 <h2 class="mb-4">Solicitud Nro: {{ request.id }}</h2>
-                <form action="{% url "requests" %}" method="POST" enctype="multipart/form-data">
+                <form action="{% url 'tech_requests' %}" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="image" class="form-label">Imagen</label>
