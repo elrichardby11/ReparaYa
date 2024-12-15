@@ -26,13 +26,13 @@ Registro Técnico - ReparaYa
                     <label class="btn btn-user-type mb-2 w-50" for="tecnico">Técnico</label>
                 </div>
 
-                <form method="post" action="{% url 'register_tech' %}">
+                <form method="post" action="{% url 'register_tech' %}" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="row g-3">
                         <div class="col-md">
-                            <div class="form-floating">
+                            <div class="form-group">
                                 {{ form.rut|as_crispy_field }}
-                            </div>
+                            </div>                        
                         </div>
                         <div class="col-md">
                             <div class="form-floating">
@@ -89,18 +89,15 @@ Registro Técnico - ReparaYa
 
                         <div class="row g-3">
                             <div class="col-md">
-                                <label for="formFile" class="form-label">Título Académico (PDF) *</label>
-                                <input class="form-control" type="file" id="formFile" accept=".pdf">
+                                {{ form.title|as_crispy_field }}
                             </div>
 
                             <div class="col-md">
-                                <label for="formFile" class="form-label">Curriculum Vitae (PDF) *</label>
-                                <input class="form-control" type="file" id="formFile" accept=".pdf">
+                                {{ form.cv|as_crispy_field }}
                             </div>
 
                             <div class="col-md">
-                                <label for="formFile" class="form-label">Carta Presentación (PDF) *</label>
-                                <input class="form-control" type="file" id="formFile" accept=".pdf">
+                                {{ form.letter|as_crispy_field }}
                             </div>
                         </div>
                     </div>

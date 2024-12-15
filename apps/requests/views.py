@@ -33,9 +33,10 @@ def add_request(request):
 
     if request.method == "POST":
         date = datetime.today().strftime('%Y-%m-%d')
+        image = request.FILES.get("image")
         device_type_id = request.POST.get("device_type", "")
-        title = request.POST.get("title")
-        comment_user = request.POST.get("problem_description")
+        title = request.POST.get("title", "")
+        comment = request.POST.get("problem_description", "")
 
         try:
             user = request.user
@@ -45,8 +46,9 @@ def add_request(request):
                 rut_user=user,
                 request_date=date,
                 id_specialty=device_type,
+                request_image=image,
                 title=title,
-                comment=comment_user,
+                comment=comment,
             )
 
             messages.success(request, "¡Se ha creado una solicitud de reparación!")

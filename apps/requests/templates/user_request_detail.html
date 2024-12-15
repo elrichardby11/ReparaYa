@@ -21,10 +21,24 @@ Solicitud Nro {{ request.id }} - ReparaYa
                 <h2 class="mb-4">Solicitud Nro: {{ request.id }}</h2>
                 <form action="{% url 'user_requests' %}" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
+                    {% if request.request_image.url %}
+
+                    <section class="section-intro padding-y-sm">
+                        <div class="container">
+                        
+                        <div class="intro-banner-wrap">
+                            <img src="{{ request.request_image.url }}" class="img-fluid rounded img-thumbnail">
+                        </div>
+                        
+                        </div>
+                    </section>
+
+                    {% else %}
                     <div class="mb-3">
                         <label for="image" class="form-label">Imagen</label>
                         <input type="file" class="form-control" id="image" name="image" disabled>
                     </div>
+                    {% endif %}
                     <div class="mb-3">
                         <label for="title" class="form-label">Título</label>
                         <input type="text" class="form-control" id="title" name="title" value="{{ request.title }}" disabled>

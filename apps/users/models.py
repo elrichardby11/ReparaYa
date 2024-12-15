@@ -25,8 +25,8 @@ class MyAccountManager(BaseUserManager):
         user.save(using=self._db)
         return user
     
-    def create_tech(self, rut, dv, first_name, last_name, phone, email, password=None, url_linkedin=None):
-        if not rut or dv:
+    def create_tech(self, rut, dv, first_name, last_name, phone, email, password=None, url_linkedin=None, title=None, cv=None, letter=None):
+        if not rut or not dv:
             raise ValueError("Debe de ingresar el rut! ")
         
         if not email:
@@ -40,6 +40,10 @@ class MyAccountManager(BaseUserManager):
             email = self.normalize_email(email=email),
             phone = phone,
             url_linkedin = url_linkedin,
+            title=title,  # Incluir el archivo 'title'
+            cv=cv,        # Incluir el archivo 'cv'
+            letter=letter # Incluir el archivo 'letter'
+
         )
 
         user.set_password(password)
@@ -100,6 +104,15 @@ class User(AbstractBaseUser):
     
     objects = MyAccountManager()
 
+def get_title_path(instance, filename):
+    return f"pdfs/technician_{instance.rut}/titulo/{filename}"
+
+def get_cv_path(instance, filename):
+    return f"pdfs/technician_{instance.rut}/cv/{filename}"
+
+def get_letter_path(instance, filename):
+    return f"pdfs/technician_{instance.rut}/carta/{filename}"
+
 class Technician(AbstractBaseUser):
     rut = models.CharField(max_length=10, primary_key=True)
     dv = models.CharField(max_length=2)
@@ -109,6 +122,15 @@ class Technician(AbstractBaseUser):
     password = models.CharField(max_length=100)
     phone = models.CharField(max_length=15)
     url_linkedin = models.CharField(max_length=100)
+    title = models.FileField(
+        upload_to=get_title_path,
+    )
+    cv = models.FileField(
+        upload_to=get_cv_path,
+    )
+    letter = models.FileField(
+        upload_to=get_letter_path,
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

@@ -9,7 +9,7 @@ Selección de Dispositivos - ReparaYa
 
     <div class="container mt-5">
         <h2 class="mb-4">Seleccione, qué dispositivo(s) sabe reparar?:</h2>
-        <form method="post" action="{% url 'device_selection' %}" id="device-form">
+        <form method="post" action="{% url 'device_selection' %}" id="device-form" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="row row-cols-2 row-cols-md-4 g-4 mb-4">
                 <div class="col">

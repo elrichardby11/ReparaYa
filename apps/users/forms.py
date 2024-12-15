@@ -59,7 +59,14 @@ class RegistrationFormTech(UserCreationForm):
 
     class Meta:
         model = Technician
-        fields = ("rut", "first_name", "last_name", "phone", "email", "password1", "password2", "url_linkedin")
+        fields = ("rut", "first_name", "last_name", "phone", "email",
+                  "password1", "password2", "url_linkedin", "title", "cv", "letter")
+        
+        widgets = {
+            'title': forms.FileInput(attrs={'accept': '.pdf'}),
+            'cv': forms.FileInput(attrs={'accept': '.pdf'}),
+            'letter': forms.FileInput(attrs={'accept': '.pdf'}),
+        }
 
     def __init__(self, *args, **kwargs):
         super(RegistrationFormTech, self).__init__(*args, **kwargs)
@@ -72,6 +79,9 @@ class RegistrationFormTech(UserCreationForm):
         self.fields['password2'].label = "Confirmar Contraseña *"
         self.fields['email_confirm'].label = "Confirmar Email "
         self.fields['url_linkedin'].label = "Linkedin (URL) "
+        self.fields['title'].label = "Título Académico (PDF) "
+        self.fields['cv'].label = "Curriculum Vitae (PDF) "
+        self.fields['letter'].label = "Carta Presentación (PDF) "
 
     def clean_rut(self):
         # Obtener el campo rut completo
@@ -99,9 +109,15 @@ class RegistrationFormTech(UserCreationForm):
         cleaned_data = super().clean()
         email = cleaned_data.get('email')
         email_confirm = cleaned_data.get('email_confirm')
+        title = cleaned_data.get('title')
+        cv = cleaned_data.get('cv')
+        letter = cleaned_data.get('letter')
 
         if email != email_confirm:
             raise forms.ValidationError("Los correos electrónicos no coinciden.")
 
+        if not title or not cv or not letter:
+            raise forms.ValidationError("Todos los archivos (Título, CV y Carta) son obligatorios.")
+        
         return cleaned_data
     

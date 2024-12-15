@@ -60,9 +60,10 @@ def register_user(request):
 
 def register_tech(request):
     if request.method == 'POST':
-        form = RegistrationFormTech(request.POST)
+        form = RegistrationFormTech(request.POST, request.FILES)
+          
         if form.is_valid():
-            # Procesar RUT
+            
             rut_completo = str(form.cleaned_data['rut']).split("-")
             if len(rut_completo) != 2:
                 messages.error(request, "Error, debe introducir un RUT válido! (10123456-1)")
@@ -82,6 +83,12 @@ def register_tech(request):
             user.rut = rut
             user.is_active = True
             request.session['tech_rut'] = rut
+            
+            # Asignar archivos cargados al modelo
+            user.title = request.FILES.get('title')
+            user.cv = request.FILES.get('cv')
+            user.letter = request.FILES.get('letter')
+            
             form.save(commit=True)
             return redirect('device_selection')
         
@@ -93,7 +100,7 @@ def register_tech(request):
 
     else:
         form = RegistrationFormTech()
-    
+
     return render(request, 'register_tech.html', {'form': form})
 
 def device_selection(request):

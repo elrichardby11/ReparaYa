@@ -19,6 +19,9 @@ class Device(models.Model):
         return f'{self.name} {self.brand} {self.model}'
 '''
 
+def get_image_path(instance, filename):
+    return f"images/requests/user_{instance.rut_user.rut}/{filename}"
+
 class Request(models.Model):
     rut_user = models.ForeignKey(User, on_delete=models.CASCADE)
     request_date = models.DateField()
@@ -27,6 +30,9 @@ class Request(models.Model):
     id_specialty = models.ForeignKey(Specialty, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     comment = models.TextField()
+    request_image = models.ImageField(
+        upload_to=get_image_path,
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
