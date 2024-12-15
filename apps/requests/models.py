@@ -1,6 +1,5 @@
 from django.db import models
 from apps.users.models import User
-from apps.services.models import TechnicianService
 from apps.specialties.models import Specialty
 
 class RequestStatus(models.Model):
@@ -22,14 +21,12 @@ class Device(models.Model):
 
 class Request(models.Model):
     rut_user = models.ForeignKey(User, on_delete=models.CASCADE)
-    technician_service = models.ForeignKey(TechnicianService, on_delete=models.CASCADE, blank=True, null=True)
     request_date = models.DateField()
     id_status = models.ForeignKey(RequestStatus, on_delete=models.CASCADE, default=1)
     #device = models.ForeignKey(Device, on_delete=models.CASCADE)
     id_specialty = models.ForeignKey(Specialty, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
-    customer_comment = models.TextField()
-    technician_comment = models.TextField(null=True, blank=True)
+    comment = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -37,8 +34,24 @@ class Request(models.Model):
         return self.title
     
 class Quotation(models.Model):
-    id_request = models.ForeignKey(Request, on_delete=models.CASCADE)
-    technician_rut = models.ForeignKey(TechnicianService, on_delete=models.CASCADE)
+    request = models.ForeignKey('requests.Request', on_delete=models.CASCADE, related_name='quotations')
+    technician = models.ForeignKey('users.Technician', on_delete=models.CASCADE, related_name='quotations')
     estimated_cost = models.IntegerField()
     estimated_duration = models.IntegerField()
     location = models.CharField(max_length=100)
+    comment = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = (("request", "technician"))
+
+class QuotationService(models.Model):
+    quotation = models.ForeignKey('requests.Quotation', on_delete=models.CASCADE, related_name='quotation_services')
+    service = models.ForeignKey('services.Service', on_delete=models.CASCADE, related_name='quotation_services')
+    price = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = (("quotation", "service"))

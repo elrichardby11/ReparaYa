@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% load static %}
+{% load custom_filters %}
+
+{% block title %}
+Crear Cotización para Nro {{ request.id }} - ReparaYa
+{% endblock %}
+
+{% block content %}
+<main class="flex-grow-1">
+    <div class="container mt-4">
+        <h2 class="mb-4">Enviar presupuesto</h2>
+    
+        <form method="post">
+            {% csrf_token %}
+            <!-- Formulario principal -->
+            <fieldset class="border p-3 mb-4">
+                <legend class="w-auto">Presupuesto</legend>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="id_estimated_cost" class="form-label">Costo Estimado</label>
+                        {{ form.estimated_cost|add_class:"form-control" }}
+                    </div>
+                    <div class="col-md-6">
+                        <label for="id_estimated_duration" class="form-label">Duración Estimada (en minutos)</label>
+                        {{ form.estimated_duration|add_class:"form-control" }}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="id_location" class="form-label">Dirección donde será la reparación</label>
+                        {{ form.location|add_class:"form-control" }}
+                    </div>
+                    <div class="col-md-6">
+                        <label for="id_comment" class="form-label">Detalle Sobre la Reparación</label>
+                        {{ form.comment|add_class:"form-control" }}
+                    </div>
+                </div>
+            </fieldset>
+    
+            <!-- Botón añadir servicio -->
+            <div class="d-flex justify-content-end mb-3">
+                <button type="button" id="add-service-btn" class="btn btn-success">Añadir servicio</button>
+            </div>
+    
+            <!-- Listado de servicios -->
+            <fieldset class="border p-3">
+                <legend class="w-auto">Servicios</legend>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Servicio</th>
+                            <th>Precio Final</th>
+                            <th>Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="services-container">
+                        {% for form in formset %}
+                            <tr class="formset-row">
+                                <td>
+                                    {{ form.service|add_class:"form-select" }}
+                                </td>
+                                <td>
+                                    {{ form.price|add_class:"form-control" }}
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-danger delete-row">Eliminar</button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <input type="hidden" name="form-TOTAL_FORMS" id="id_form-TOTAL_FORMS" value="{{ formset.total_form_count }}">
+                <input type="hidden" name="form-INITIAL_FORMS" id="id_form-INITIAL_FORMS" value="{{ formset.initial_form_count }}">
+                <input type="hidden" name="form-MIN_NUM_FORMS" value="{{ formset.min_num_forms }}">
+                <input type="hidden" name="form-MAX_NUM_FORMS" value="{{ formset.max_num_forms }}">
+            </fieldset>
+    
+            <!-- Botón de envío -->
+            <div class="mt-4">
+                <button type="submit" class="btn btn-custom-orange">Enviar presupuesto</button>
+            </div>
+        </form>
+    </div>
+    
+    <br>
+
+    <!-- JavaScript personalizado -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const addServiceBtn = document.getElementById("add-service-btn");
+            const servicesContainer = document.getElementById("services-container");
+            const totalForms = document.getElementById("id_form-TOTAL_FORMS");
+
+            addServiceBtn.addEventListener("click", function () {
+                const formCount = parseInt(totalForms.value, 10);
+
+                // Crear una nueva fila para el servicio
+                const newRowHTML = `
+                    <tr class="formset-row">
+                        <td>
+                            <select name="form-${formCount}-service" class="form-select" id="id_form-${formCount}-service">
+                                <option value="">---------</option>
+                                {% for service in services %}
+                                    <option value="{{ service.id }}">{{ service.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                            <input type="number" name="form-${formCount}-price" class="form-control" id="id_form-${formCount}-price">
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-danger delete-row">Eliminar</button>
+                        </td>
+                    </tr>
+                `;
+
+                servicesContainer.insertAdjacentHTML('beforeend', newRowHTML);
+                totalForms.value = formCount + 1;
+            });
+
+            servicesContainer.addEventListener("click", function (event) {
+                if (event.target.classList.contains("delete-row")) {
+                    const row = event.target.closest("tr");
+                    row.remove();
+                }
+            });
+        });
+    </script>
+</main>
+{% endblock content %}

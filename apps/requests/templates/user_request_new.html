@@ -23,11 +23,11 @@ Nueva Solicitud - ReparaYa
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="image" class="form-label">Imagen</label>
-                        <input type="file" class="form-control" id="image" name="image">
+                        <input type="file" class="form-control" id="image" name="image" accept="image/*">
                     </div>
                     <div class="mb-3">
                         <label for="title" class="form-label">Título</label>
-                        <input type="text" class="form-control" id="title" name="title" required>
+                        <input type="text" class="form-control" id="title" name="title" required placeholder="Ej: S23 Ultra necesita cambio de pantalla">
                     </div>
                     <div class="mb-3">
                         <label for="device_type" class="form-label">Tipo Electrónico</label>
@@ -39,7 +39,7 @@ Nueva Solicitud - ReparaYa
                     </div>
                     <div class="mb-3">
                         <label for="problem_description" class="form-label">Describe tu Problema detalladamente</label>
-                        <textarea class="form-control" id="problem_description" name="problem_description" rows="4" required></textarea>
+                        <textarea class="form-control" id="problem_description" name="problem_description" rows="4" required placeholder="Ej: Modelo: SM-S918BDS..."></textarea>
                     </div>
                     <button type="submit" class="btn btn-custom-orange">Continuar</button>
                 </form>

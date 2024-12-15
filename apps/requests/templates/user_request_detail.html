@@ -23,7 +23,7 @@ Solicitud Nro {{ request.id }} - ReparaYa
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="image" class="form-label">Imagen</label>
-                        <input type="file" class="form-control" id="image" name="image">
+                        <input type="file" class="form-control" id="image" name="image" disabled>
                     </div>
                     <div class="mb-3">
                         <label for="title" class="form-label">Título</label>
@@ -31,13 +31,13 @@ Solicitud Nro {{ request.id }} - ReparaYa
                     </div>
                     <div class="mb-3">
                         <label for="device_type" class="form-label">Tipo Electrónico</label>
-                        <select class="form-select" id="device_type" name="device_type" required>
+                        <select class="form-select" id="device_type" name="device_type" disabled>
                             <option value="{{ request.id_specialty.id }}">{{ request.id_specialty.name }}</option>
                         </select>
                     </div>
                     <div class="mb-3">
                         <label for="problem_description" class="form-label">Descripción de tu Problema detallado</label>
-                        <textarea class="form-control" id="problem_description" name="problem_description" rows="4" disabled>{{ request.customer_comment }}</textarea>
+                        <textarea class="form-control" id="problem_description" name="problem_description" rows="4" disabled>{{ request.comment }}</textarea>
                     </div>
                     <button type="submit" class="btn btn-custom-orange">Continuar</button>
                 </form>

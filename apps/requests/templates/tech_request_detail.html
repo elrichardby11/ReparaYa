@@ -7,23 +7,20 @@ Solicitud Nro {{ request.id }} - ReparaYa
 
 {% block content %}
 
-{% load static %}
-
 <!-- Main Content -->
 <main class="flex-grow-1">
     <div class="container-fluid">
         <div class="row">
 
             {% include "include/tech_sidebar.html" %}
-            
             <!-- Form -->
             <div class="col-md-9 py-3">
                 <h2 class="mb-4">Solicitud Nro: {{ request.id }}</h2>
-                <form action="{% url 'tech_requests' %}" method="POST" enctype="multipart/form-data">
+                <form action="{% url 'create_quotation' request.id %}" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="image" class="form-label">Imagen</label>
-                        <input type="file" class="form-control" id="image" name="image">
+                        <input type="file" class="form-control" id="image" name="image" disabled>
                     </div>
                     <div class="mb-3">
                         <label for="title" class="form-label">Título</label>
@@ -31,15 +28,64 @@ Solicitud Nro {{ request.id }} - ReparaYa
                     </div>
                     <div class="mb-3">
                         <label for="device_type" class="form-label">Tipo Electrónico</label>
-                        <select class="form-select" id="device_type" name="device_type" required>
+                        <select class="form-select" id="device_type" name="device_type" disabled>
                             <option value="{{ request.id_specialty.id }}">{{ request.id_specialty.name }}</option>
                         </select>
                     </div>
                     <div class="mb-3">
                         <label for="problem_description" class="form-label">Descripción de tu Problema detallado</label>
-                        <textarea class="form-control" id="problem_description" name="problem_description" rows="4" disabled>{{ request.customer_comment }}</textarea>
+                        <textarea class="form-control" id="problem_description" name="problem_description" rows="4" disabled>{{ request.comment }}</textarea>
                     </div>
-                    <button type="submit" class="btn btn-custom-orange">Continuar</button>
+
+                    {% if quotation %}
+                    <fieldset class="border p-3 mb-4">
+                        <legend class="w-auto">Cotización</legend>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="id_estimated_cost" class="form-label">Coste Total Estimado</label>
+                                <input type="text" class="form-control" id="id_estimated_cost" value="{{ quotation.estimated_cost }}" disabled>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="id_estimated_duration" class="form-label">Duración Estimada (en minutos)</label>
+                                <input type="text" class="form-control" id="id_estimated_duration" value="{{ quotation.estimated_duration }}" disabled>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="id_location" class="form-label">Dirección donde será la reparación</label>
+                                <input type="text" class="form-control" id="id_location" value="{{ quotation.location }}" disabled>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="id_comment" class="form-label">Detalle Sobre la Reparación</label>
+                                <input type="text" class="form-control" id="id_comment" value="{{ quotation.comment }}" disabled>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <!-- Mostrar los servicios de la cotización -->
+                    <fieldset class="border p-3 mb-4">
+                        <legend class="w-auto">Servicios Cotizados</legend>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Servicio</th>
+                                    <th>Precio Final</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for service in services %}
+                                <tr>
+                                    <td>{{ service.service.name }}</td>
+                                    <td>{{ service.price }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </fieldset>
+                    <button type="submit" class="btn btn-custom-orange" disabled>Enviar presupuesto</button>
+                    {% else %}
+                    <button type="submit" class="btn btn-custom-orange">Enviar presupuesto</button>
+                    {% endif %}
                 </form>
             </div>
         </div>

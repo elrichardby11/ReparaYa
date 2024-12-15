@@ -9,4 +9,6 @@ urlpatterns = [
     # Technician
     path("pendings", views.tech_requests, name="tech_requests"),
     path("pendings/request_detail/<int:id>", views.tech_requests, name="tech_request_detail"),
+    path('<int:request_id>/quotation/create/', views.create_quotation, name='create_quotation'),
+
 ]

@@ -1,10 +1,12 @@
 from django.shortcuts import get_object_or_404, redirect, render
+from apps.services.models import Service
 from apps.users.decorators import technician_required, user_required
 from apps.specialties.models import Specialty
 from django.contrib import messages
-from apps.users.models import TechnicianSpecialty
-from .models import Request
+from apps.users.models import Technician, TechnicianSpecialty
+from .models import Quotation, QuotationService, Request
 from datetime import datetime
+from .forms import QuotationForm, QuotationServiceFormSet
 
 # USER
 
@@ -44,7 +46,7 @@ def add_request(request):
                 request_date=date,
                 id_specialty=device_type,
                 title=title,
-                customer_comment=comment_user,
+                comment=comment_user,
             )
 
             messages.success(request, "¡Se ha creado una solicitud de reparación!")
@@ -68,11 +70,10 @@ def tech_requests(request, id=None):
     if request.method == "POST":
         return redirect("tech_requests")
     
-    # Consulta para saber todas las solicitudes que puede
-    # reparar el técnico de acuerdo a lo que sabe reparar
+    # Consulta para saber todas las solicitudes que puede reparar el técnico de acuerdo a lo que sabe reparar
     technician_rut = request.user.rut
     available_requests = Request.objects.filter(
-    id_specialty__in=TechnicianSpecialty.objects.filter(rut_technician=technician_rut).values('id_specialty'),
+        id_specialty__in=TechnicianSpecialty.objects.filter(rut_technician=technician_rut).values('id_specialty'),
     ).exclude(id_status_id__in=[2, 3]).order_by("-created_at")[:5]
     
     context = {"available_requests": available_requests}
@@ -81,8 +82,51 @@ def tech_requests(request, id=None):
         solicitud = get_object_or_404(Request, id=id, id_status=1,
                                       id_specialty__in=TechnicianSpecialty.objects.filter(rut_technician=technician_rut)
                                       .values('id_specialty'))
+        # Buscar si tiene cotización
+        quotation = Quotation.objects.filter(request=solicitud, technician__rut=request.user.rut).first()
+        services = QuotationService.objects.filter(quotation=quotation)
+        context.update({
+            "quotation": quotation,
+            "services": services,
+        })
         context["request"] = solicitud
 
     template_name = "tech_request_detail.html" if id else "tech_requests.html"
     
     return render(request, template_name, context)
+
+@technician_required
+def create_quotation(request, request_id):
+    request_obj = get_object_or_404(Request, id=request_id)
+    services = Service.objects.all()
+
+    if request.method == "POST":
+        form = QuotationForm(request.POST)
+        formset = QuotationServiceFormSet(request.POST, queryset=QuotationService.objects.none())
+
+        if form.is_valid() and formset.is_valid():
+            quotation = form.save(commit=False)
+            quotation.request = request_obj
+            quotation.technician = get_object_or_404(Technician, rut=request.user.rut)
+            quotation.save()
+
+            for form in formset:
+                if form.cleaned_data:
+                    service = form.save(commit=False)
+                    service.quotation = quotation
+                    service.save()
+
+            messages.success(request, "¡Cotización creada con éxito!")
+            return redirect("user_request_detail", request_id)
+        else:
+            messages.error(request, "Hubo un error al guardar los datos.")
+
+    else:
+        form = QuotationForm()
+        formset = QuotationServiceFormSet(queryset=QuotationService.objects.none())
+
+    return render(request, 'quotations/create_quotation.html', {
+        'form': form,
+        'formset': formset,
+        'services': services,
+    })
