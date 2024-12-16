@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-Solicitud Nro {{ request.id }} - ReparaYa
+Cotización Nro {{ quotation.id }} - ReparaYa
 {% endblock %}
 
 {% block content %}
@@ -12,19 +12,19 @@ Solicitud Nro {{ request.id }} - ReparaYa
     <div class="container-fluid">
         <div class="row">
 
-            {% include "include/tech_sidebar.html" %}
+            {% include "include/user_sidebar_technicians.html" %}
             <!-- Form -->
             <div class="col-md-9 py-3">
-                <h2 class="mb-4">Solicitud Nro: {{ request.id }}</h2>
-                <form action="{% url 'create_quotation' request.id %}" method="POST" enctype="multipart/form-data">
+                <h2 class="mb-4">Cotización Nro: {{ quotation.id }}</h2>
+                <form action="{% url 'technicians' %}" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
-                    {% if request.request_image.url %}
+                    {% if quotation.request.request_image.url %}
 
                     <section class="section-intro padding-y-sm">
                         <div class="container">
                         
                         <div class="intro-banner-wrap">
-                            <img src="{{ request.request_image.url }}" class="img-fluid rounded img-thumbnail">
+                            <img src="{{ quotation.request.request_image.url }}" class="img-fluid rounded img-thumbnail">
                         </div>
                         
                         </div>
@@ -37,17 +37,17 @@ Solicitud Nro {{ request.id }} - ReparaYa
                     {% endif %}
                     <div class="mb-3">
                         <label for="title" class="form-label">Título</label>
-                        <input type="text" class="form-control" id="title" name="title" value="{{ request.title }}" disabled>
+                        <input type="text" class="form-control" id="title" name="title" value="{{ quotation.request.title }}" disabled>
                     </div>
                     <div class="mb-3">
                         <label for="device_type" class="form-label">Tipo Electrónico</label>
                         <select class="form-select" id="device_type" name="device_type" disabled>
-                            <option value="{{ request.id_specialty.id }}">{{ request.id_specialty.name }}</option>
+                            <option value="{{ request.id_specialty.id }}">{{ quotation.request.id_specialty.name }}</option>
                         </select>
                     </div>
                     <div class="mb-3">
                         <label for="problem_description" class="form-label">Descripción de tu Problema detallado</label>
-                        <textarea class="form-control" id="problem_description" name="problem_description" rows="4" disabled>{{ request.comment }}</textarea>
+                        <textarea class="form-control" id="problem_description" name="problem_description" rows="4" disabled>{{ quotation.request.comment }}</textarea>
                     </div>
 
                     {% if quotation %}
@@ -95,9 +95,7 @@ Solicitud Nro {{ request.id }} - ReparaYa
                             </tbody>
                         </table>
                     </fieldset>
-                    <button type="submit" class="btn btn-custom-orange" disabled>Enviar presupuesto</button>
-                    {% else %}
-                    <button type="submit" class="btn btn-custom-orange">Enviar presupuesto</button>
+                    <button type="submit" class="btn btn-custom-orange">Contactar</button>
                     {% endif %}
                 </form>
             </div>

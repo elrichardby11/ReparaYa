@@ -1,0 +1,18 @@
+{% load static %}
+<div class="col-md-3 sidebar py-3">
+    <h5>Técnicos Interesados en Tus Solicitudes:</h5>
+    <div class="list-group">
+        {% for tech in techs %}
+            <a href="{% url 'technicians_detail' tech.id %}" class="list-group-item list-group-item-action">
+                <h6>{{ tech.request.title }}</h6>
+                <small class="text-muted">Nombre Técnico: {{ tech.technician.first_name }} {{ tech.technician.last_name }}</small>
+                <br>
+                <small class="text-muted">Costo Total Estimado: ${{ tech.estimated_cost }}</small>
+                <br>
+                <small class="text-muted">Duración: {{ tech.estimated_duration }} minutos</small>
+            </a>
+        {% empty %}
+            <p class="text-muted">No hay técnicos interesados aún.</p>
+        {% endfor %}
+    </div>
+</div>

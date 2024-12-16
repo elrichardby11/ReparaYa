@@ -19,8 +19,8 @@ def requests(request, id=None):
     context = {"repair_history": requests_history}
 
     if id:
-        solicitud = get_object_or_404(Request, id=id, rut_user=request.user.rut)
-        context["request"] = solicitud
+        user_request = get_object_or_404(Request, id=id, rut_user=request.user.rut)
+        context["request"] = user_request
 
     template_name = "user_request_detail.html" if id else "user_requests.html"
     
@@ -64,6 +64,30 @@ def add_request(request):
     }
 
     return render(request, "user_request_new.html", context)
+
+@user_required
+def technicians(request, id=None):
+    if request.method == "POST":
+        return redirect("technicians")
+
+    #Buscar técnicos interesados
+    user_requests = Request.objects.filter(rut_user=request.user.rut, id_status=1)
+    interested_technicians = Quotation.objects.filter(request_id__in=user_requests).order_by('-created_at')[:5]
+
+    context = {"techs": interested_technicians,}
+
+    if id:
+        quotation = Quotation.objects.filter(id=id).first()
+        services = QuotationService.objects.filter(quotation=quotation)
+        context.update({
+            "services": services,
+        })
+
+        context["quotation"] = quotation
+
+    template_name = "user_technician_detail.html" if id else "user_technicians.html"
+
+    return render(request, template_name, context=context)
 
 # TECH
 
@@ -119,7 +143,7 @@ def create_quotation(request, request_id):
                     service.save()
 
             messages.success(request, "¡Cotización creada con éxito!")
-            return redirect("user_request_detail", request_id)
+            return redirect("tech_request_detail", id=request_id)
         else:
             messages.error(request, "Hubo un error al guardar los datos.")
 
