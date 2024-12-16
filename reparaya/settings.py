@@ -14,6 +14,7 @@ from pathlib import Path
 
 import os
 import sys
+from decouple import config
 
 PROJECT_ROOT = os.path.dirname(__file__)
 sys.path.append(os.path.join(os.path.dirname(__file__), 'apps'))
@@ -30,6 +31,14 @@ SECRET_KEY = "django-insecure-g(+=r+3-os_t&ud%_o#o%ktbq$jp$!#ya%v_cv0iz59r-+f6l)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
+# EMAIL SETTINGS
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = config('EMAIL_PORT', cast=int)
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 ALLOWED_HOSTS = []
 

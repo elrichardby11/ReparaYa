@@ -7,6 +7,8 @@ from apps.users.models import Technician, TechnicianSpecialty
 from .models import Quotation, QuotationService, Request
 from datetime import datetime
 from .forms import QuotationForm, QuotationServiceFormSet
+from django.core.mail import send_mail
+from django.conf import settings
 
 # USER
 
@@ -141,6 +143,32 @@ def create_quotation(request, request_id):
                     service = form.save(commit=False)
                     service.quotation = quotation
                     service.save()
+            
+            # Enviar Correo al Usuario
+            message = (
+                f"Estimado/a {request_obj.rut_user.first_name},\n\n"
+                f"¡Un técnico de ReparaYa ha enviado una cotización para la solicitud Nro {request_obj.id}!\n\n"
+                f"A continuación, encontrarás un resumen de la cotización:\n"
+                f"    - Título de la solicitud: {request_obj.title}\n"
+                f"    - Descripción del problema: {request_obj.comment}\n\n"
+                f"Para revisar los detalles completos de la cotización, incluidos los servicios recomendados y sus costos, "
+                f"por favor ingresa a tu cuenta en nuestro sitio web.\n\n"
+                f"Si tienes alguna duda o necesitas más información, no dudes en contactarnos.\n\n"
+                f"Gracias por confiar en ReparaYa.\n\n"
+                f"Saludos cordiales,\n"
+                f"El equipo de ReparaYa"
+            )
+
+            subject = f"Cotización recibida para tu solicitud Nro {request_obj.id}"
+            email = request_obj.rut_user.email
+ 
+            send_mail(
+                subject,
+                message,
+                'setting.EMAIL_HOST_USER',
+                [email],
+                fail_silently=False
+            )
 
             messages.success(request, "¡Cotización creada con éxito!")
             return redirect("tech_request_detail", id=request_id)
